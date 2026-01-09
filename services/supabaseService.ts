@@ -27,9 +27,12 @@ create policy "Permitir todo a usuarios anon" on medications for all using (true
 export const supabaseService = {
   async getMedications(): Promise<{ data: Medication[], error?: string }> {
     try {
+      // Por defecto Supabase limita a 1000 registros. 
+      // Añadimos .limit(10000) para asegurar que se recuperen todos los medicamentos.
       const { data, error } = await supabase
         .from('medications')
-        .select('*');
+        .select('*')
+        .limit(10000);
       
       if (error) {
         return { data: [], error: error.message };
@@ -61,6 +64,7 @@ export const supabaseService = {
       cantidad: Math.round(m.cantidad)
     }));
 
+    // Para conjuntos muy grandes, Supabase permite upserts masivos de miles de filas
     const { error } = await supabase
       .from('medications')
       .upsert(payload, { onConflict: 'id' });

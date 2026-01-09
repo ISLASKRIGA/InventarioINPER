@@ -104,7 +104,7 @@ const App: React.FC = () => {
       setMedications(updatedMeds);
       await supabaseService.upsertMedications(newData);
       setSyncStatus('success');
-      setActiveTab('table');
+      // Se eliminó setActiveTab('table') para permanecer en la pestaña actual
       setFilterType('all');
     } catch (err: any) {
       setSyncStatus('error');
