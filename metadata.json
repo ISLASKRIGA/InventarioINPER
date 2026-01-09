@@ -1,0 +1,5 @@
+{
+  "name": "FarmaINPER",
+  "description": "Sistema avanzado de gestión de inventario de medicamentos con análisis estadístico, importación de Excel e inteligencia artificial para predicción de caducidades.",
+  "requestFramePermissions": []
+}
