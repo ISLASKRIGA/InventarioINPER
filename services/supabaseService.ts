@@ -9,13 +9,14 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export const SQL_SETUP_SCRIPT = `
 -- Ejecuta este código en el SQL Editor de tu Dashboard de Supabase
+-- Usamos NUMERIC para evitar errores con decimales de precisión de Excel
 create table medications (
   id text primary key,
   clave text,
   nombre text,
   lote text,
   fecha_caducidad text,
-  cantidad integer
+  cantidad numeric
 );
 
 -- Habilitar acceso público (opcional, ajusta según tu seguridad)
@@ -40,7 +41,7 @@ export const supabaseService = {
         nombre: item.nombre,
         lote: item.lote,
         fechaCaducidad: item.fecha_caducidad,
-        cantidad: item.cantidad
+        cantidad: Number(item.cantidad) || 0
       }));
 
       return { data: mapped };
@@ -50,13 +51,14 @@ export const supabaseService = {
   },
 
   async upsertMedications(meds: Medication[]) {
+    // Aseguramos que la cantidad sea un número limpio antes de enviar
     const payload = meds.map(m => ({
       id: m.id,
       clave: m.clave,
       nombre: m.nombre,
       lote: m.lote,
       fecha_caducidad: m.fechaCaducidad,
-      cantidad: m.cantidad
+      cantidad: Math.round(m.cantidad)
     }));
 
     const { error } = await supabase

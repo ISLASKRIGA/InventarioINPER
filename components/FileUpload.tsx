@@ -84,13 +84,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onDataLoaded }) => {
           
           if (!nombre && !clave) continue;
 
+          // CORRECCIÓN: Usamos Math.round para eliminar los decimales basura de Excel (ej: 624.0000000001 -> 624)
+          const rawCantidad = colMap.cantidad !== -1 ? Number(row[colMap.cantidad]) : 0;
+          const cantidadLimpia = Math.round(rawCantidad || 0);
+
           mappedData.push({
             id: `med-${i}-${Date.now()}`,
             clave: clave || 'N/A',
             nombre: nombre || 'Sin nombre',
             lote: lote || 'N/A',
             fechaCaducidad: colMap.fecha !== -1 ? parseExcelDate(row[colMap.fecha]) : '2099-01-01',
-            cantidad: colMap.cantidad !== -1 ? (Number(row[colMap.cantidad]) || 0) : 0
+            cantidad: cantidadLimpia
           });
         }
 
